@@ -1,0 +1,16 @@
+---
+
+- hosts: masters
+  gather_facts: no
+
+  tasks:
+  - name:  get the list of users
+    local_action: shell ls -al /home/ansible/ansible-scripts/keys/ |awk '{print $9}'| cut -f1 -d '.'|grep -v '^$'
+    register: users
+
+  - name: print the users
+    debug:
+      msg: " users: {{ item }}"
+    with_items: "{{ users.stdout_lines }}"
+
+

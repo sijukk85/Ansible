@@ -1,0 +1,29 @@
+---
+- hosts: mesos-cluster
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: create user
+    user: name=hadoop password=$6$NG8whxKfz3cuY5rP$Jb.kg3A7eIpKV.9ctifEMnxbSxdnKgLeXFIKf9XNMvpZ2uv0gAygffVfBwfqN3YbWAMXXHcwiYQxsh.h8q8sI1 group=hadoop
+
+  - name: generate ssh key for hadoop
+    become_user: hadoop
+    command: ssh-keygen -t rsa -f /home/hadoop/.ssh/id_rsa -q -N ""
+    args:
+      creates: /home/hadoop/.ssh
+
+  - name: read ssh key to public_key variable 
+    slurp: src={{ item }}
+    with_items: 
+    - /home/hadoop/.ssh/id_rsa.pub
+    register: public_key
+    delegate_to: webserver
+ 
+  - name: copy keys to remote machine
+    lineinfile:
+      dest: /home/hadoop/.ssh/authorized_keys
+      line: "{{ item.content | b64decode }}"
+    with_items: "{{ public_key.results }}"
+   
+

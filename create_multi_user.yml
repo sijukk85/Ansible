@@ -1,0 +1,30 @@
+---
+- hosts: masters
+  gather_facts: no
+
+  tasks:
+  - name: get the list of users
+    local_action: shell ls -al /home/ansible/ansible-scripts/keys/ |awk '{print $9}'| cut -f1 -d '.'|grep -v '^$'
+    register: users
+
+  - name: create user
+    user: 
+      name: "{{ item }}"
+      password: $6$mjnKHkdQAUTLw9g1$JDReR31/MkcNFt8AFLuGgbSDZxA60HbKOphZqdcdMSumAVMR80MZYsOLCJtA/H8Vl68iQqkfC1VxSkJfSUXho1 
+      createhome: yes
+      state:  present
+    with_items: "{{ users.stdout_lines }}"
+    become: yes
+
+  - name: create .ssh directory
+    file: state=directory path=~/.ssh
+    become: yes
+    become_user: "{{ item }}"
+    with_items: "{{ users.stdout_lines }}"
+
+
+  - name: copy ssh key from ACS
+    copy: src="/home/ansible/ansible-scripts/keys/{{ item }}.pub" dest=~/.ssh/authorized_keys mode=0600
+    become: yes
+    become_user: "{{ item }}" 
+    with_items: "{{ users.stdout_lines }}"

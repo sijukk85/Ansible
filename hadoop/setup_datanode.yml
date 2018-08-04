@@ -1,0 +1,61 @@
+---
+- hosts: mesos-cluster
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: Ensure hadoop installed
+    yum: name=hadoop state=present
+
+  - name: ensure hadoop user exists
+    stat: path=/home/hadoop
+    register: user_home
+
+  - debug:
+      msg: "User home exists for Hadoop"
+    when: user_home.stat.exists == true
+
+  - name: copy the .bashrc to master node
+    copy: src=templates/.bashrc dest=/home/hadoop/ owner=hadoop group=hadoop
+
+  - name: copy the core-site.xml to master node
+    copy: src=templates/core-site.xml dest=/etc/hadoop/conf/ follow=yes owner=root group=root
+
+  - name: copy the hdfs-site.xml to master node
+    copy: src=templates/hdfs-site.xml dest=/etc/hadoop/conf/ follow=yes owner=root group=root
+
+  - name: copy the hadoop-env.sh to master node
+    copy: src=templates/hadoop-env.sh dest=/etc/hadoop/conf/ follow=yes owner=root group=root
+
+  - name: Ensure log directory
+    file: path=/var/log/hadoop-hdfs owner=hadoop group=hadoop mode=755 state=absent
+
+  - name: Ensure datanode directory
+    file: path=/var/lib/hadoop-hdfs/dfs/datanode owner=hadoop group=hadoop mode=755 state=directory
+
+  - name: Ensure log directory
+    file: path=/var/log/hadoop/logs owner=hadoop group=hadoop mode=755 state=directory
+
+  - name: Ensure PID directory
+    file: path=/var/run/hadoop/pid owner=hadoop group=hadoop mode=755 state=directory
+
+  - name: Ensure libexec symlink exists for hdfs
+    file: src=/usr/lib/hadoop/libexec path=/usr/lib/hadoop-hdfs/libexec owner=root state=link
+
+  - name: Open port for namenode
+    firewalld: immediate=true port=50070/tcp state=enabled zone=public permanent=true
+
+  - name: Open internal port for namenode
+    firewalld: immediate=true port=9000/tcp state=enabled zone=public permanent=true
+
+  - name: Open port for datanode
+    firewalld: immediate=true port=50090/tcp state=enabled zone=public permanent=true
+
+- hosts: masters
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: copy the slaves list to master node
+    copy: src=templates/slaves dest=/etc/hadoop/conf/ follow=yes owner=root group=root
+

@@ -1,0 +1,28 @@
+---
+- hosts: slaves
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: install mesosphere repo
+    yum: name=http://repos.mesosphere.io/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm state=present
+
+  - name: install mesos
+    yum: name=mesos state=present
+
+  - name: update mesos default file
+    copy:
+      src: template/zk
+      dest: /etc/mesos/zk 
+
+  - name: update mesos default file 
+    copy: 
+      src: template/mesos-slave
+      dest: /etc/default/mesos-slave
+
+  - name: disable mesos master service 
+    systemd: state=stopped name=mesos-master.service enabled=no
+ 
+  - name: start mesos clients
+    systemd: state=stopped name=mesos-slave.service enabled=yes
+

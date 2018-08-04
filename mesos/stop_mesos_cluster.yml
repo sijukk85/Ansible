@@ -1,0 +1,23 @@
+---
+- hosts: slaves
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: stop mesos slaves
+    systemd: state=stopped name=mesos-slave.service
+
+- hosts: masters
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: stop marathon
+    systemd: state=stopped name=marathon.service
+
+  - name: stop mesos master
+    systemd: state=stopped name=mesos-master.service
+
+  - name: stop zookeeper
+    systemd: state=stopped name=zookeeper.service 
+

@@ -1,0 +1,18 @@
+---
+- hosts: masters
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: Start Namenode
+    become_user: hadoop
+    shell: . /home/hadoop/.bashrc; hadoop-daemons.sh start namenode
+
+- hosts: mesos-cluster
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: Start Datanode
+    become_user: hadoop
+    shell: . /home/hadoop/.bashrc; hadoop-daemons.sh start datanode

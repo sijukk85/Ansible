@@ -1,0 +1,1 @@
+ansible mesos-cluster -m copy -a "src=template/resolve.conf dest=/etc/resolv.conf"

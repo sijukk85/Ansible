@@ -1,0 +1,26 @@
+---
+- hosts: masters
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: start zookeeper
+    systemd: state=started name=zookeeper.service
+
+  - name: start mesos master
+    systemd: state=started name=mesos-master.service
+
+  - name: start marathon 
+    systemd: state=started name=marathon.service
+
+- hosts: slaves
+  gather_facts: no
+  become: yes
+
+  tasks: 
+  - name: stop firewalld
+    systemd: state=stopped name=firewalld.service
+
+  - name: start mesos clients
+    systemd: state=started name=mesos-slave.service
+

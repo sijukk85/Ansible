@@ -1,0 +1,13 @@
+---
+- hosts: mesos-cluster
+  become: yes
+
+  tasks:
+  - name: Copy the new resolve.conf file
+    copy: src=template/public_resolve.conf dest=/etc/resolv.conf
+  
+  - name: Change DNS entry in ipcfg
+    lineinfile: path=/etc/sysconfig/network-scripts/ifcfg-enp0s3 regexp='^DNS1' line='DNS1=8.8.8.8'
+  
+  - name: remove the extra DNS line
+    lineinfile: path=/etc/sysconfig/network-scripts/ifcfg-enp0s3 regexp='^DNS2' line='DNS2=8.8.4.4'   

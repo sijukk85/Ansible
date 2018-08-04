@@ -1,0 +1,10 @@
+---
+- hosts: mesos-cluster
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: create user
+    user: name=spark password=$6$rounds=40000$MKB88mRQ3h04kAWS$OZmQUtpWEE5PVc.yzysSqe4ud8fUx1i2B4H/p/e5cIqbsYutyE.VW50eCJHwjkwFvy.3qzqKv9yy9RfbFl7Lz/ group=hadoop generate_ssh_key=yes ssh_key_bits=2048 
+   
+

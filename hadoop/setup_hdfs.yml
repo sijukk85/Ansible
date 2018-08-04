@@ -1,0 +1,42 @@
+---
+- hosts: masters 
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: copy the .bashrc to master node
+    copy: src=templates/.bashrc dest=/home/hadoop/ owner=hadoop group=hadoop
+
+  - name: copy the core-site.xml to master node
+    copy: src=templates/core-site.xml dest=/etc/hadoop/conf/ follow=yes owner=root group=root 
+
+  - name: copy the hdfs-site.xml to master node
+    copy: src=templates/hdfs-site.xml dest=/etc/hadoop/conf/ follow=yes owner=root group=root
+
+  - name: copy the hadoop-env.sh to master node
+    copy: src=templates/hadoop-env.sh dest=/etc/hadoop/conf/ follow=yes owner=root group=root
+
+  - name: Ensure log directory
+    file: path=/var/log/hadoop-hdfs owner=hadoop group=hadoop mode=755 state=absent
+
+  - name: Ensure namenode  directory
+    file: path=/var/lib/hadoop-hdfs/dfs/namenode owner=hadoop group=hadoop mode=755 state=directory
+
+  - name: Ensure datanode directory
+    file: path=/var/lib/hadoop-hdfs/dfs/datanode owner=hadoop group=hadoop mode=755 state=directory
+
+  - name: Ensure log directory
+    file: path=/var/log/hadoop/logs owner=hadoop group=hadoop mode=755 state=directory
+
+  - name: Ensure PID directory
+    file: path=/var/run/hadoop/pid owner=hadoop group=hadoop mode=755 state=directory
+ 
+  - name: Check whether name node is formatted 
+    stat: path=/var/lib/hadoop-hdfs/dfs/namenode/current/
+    register: namenode_current
+
+  - name: Format namenode
+    become_user: hadoop
+    shell: hdfs namenode -format
+    when: namenode_current.stat.exists == false  
+

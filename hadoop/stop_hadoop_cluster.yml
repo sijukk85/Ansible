@@ -1,0 +1,19 @@
+---
+- hosts: masters
+  gather_facts: no
+  become: yes
+  become_user: hadoop
+
+  tasks:
+  - name: stop Datanode
+    shell: /usr/lib/hadoop/sbin/hadoop-daemon.sh --config /etc/hadoop/conf stop datanode
+
+- hosts: masters
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: stop Namenode
+    become_user: hadoop
+    shell: . /home/hadoop/.bashrc; hadoop-daemons.sh stop namenode
+

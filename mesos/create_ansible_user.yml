@@ -1,0 +1,18 @@
+---
+- hosts: new_slaves
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: create user
+    user: name=ansible password=$6$mjnKHkdQAUTLw9g1$JDReR31/MkcNFt8AFLuGgbSDZxA60HbKOphZqdcdMSumAVMR80MZYsOLCJtA/H8Vl68iQqkfC1VxSkJfSUXho1 group=wheel
+  - name: replace the sudoers file in destinations
+    copy: src=/home/ansible/ansible-scripts/sudoers dest=/etc/sudoers owner=root group=root mode=0440
+
+  - name: create .ssh directory
+    file: state=directory path=/home/ansible/.ssh 
+
+  - name: copy ssh key from ACS
+    copy: src=/home/ansible/.ssh/id_rsa.pub dest=/home/ansible/.ssh/authorized_keys owner=ansible group=wheel mode=0600 
+  
+
