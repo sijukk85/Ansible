@@ -12,12 +12,10 @@
         present
 
   - name: Add docker repo 
-    ansible.builtin.yum_repository:
-      name: epel
-      description: Docker YUM repo
-      file: external_repos
-      baseurl: https://download.docker.com/linux/centos/docker-ce.repo
-      gpgcheck: no
+    ansible.builtin.shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    args:
+      chdir: /etc/yum.repos.d/
+      creates: docker-ce.repo
   
   - name: Install docker modules
     ansible.builtin.yum:
@@ -28,11 +26,6 @@
         - docker-buildx-plugin
         - docker-compose-plugin
       state: present
-  - name: Enable docker servide
-    ansible.builtin.systemd_service:
-      name: docker
-      enabled: true
-      state:  started
 
 
 

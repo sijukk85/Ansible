@@ -15,12 +15,20 @@
     args:
       creates: /home/ansible/.ssh
 
+  - name: Touch file authorized_keys
+    ansible.builtin.file:
+     path: /home/ansible/.ssh/authorized_keys
+     state: touch
+     owner: ansible
+     group: ansible
+     mode: '0644'
+
   - name: read ssh key to public_key variable 
     slurp: src={{ item }}
     with_items: 
     - /home/ansible/.ssh/id_rsa.pub
     register: public_key
-    delegate_to: k8smaster
+    delegate_to: localhost
  
   - name: copy keys to remote machine
     lineinfile:
