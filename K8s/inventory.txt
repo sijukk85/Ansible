@@ -1,0 +1,13 @@
+k8smaster ansible_ssh_host=192.168.0.110
+k8s-node1 ansible_ssh_host=192.168.0.113
+k8s-node1 ansible_ssh_host=192.168.0.114
+[masters]
+k8smaster
+[nodes]
+k8s-node1
+k8s-node2
+[k8s-cluster:children]
+masters
+nodes
+[k8s-cluster:vars]
+ansible_ssh_user=ansible

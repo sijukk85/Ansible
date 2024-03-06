@@ -1,0 +1,38 @@
+---
+- hosts: k8s-cluster
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: Ensure yum-utils installed
+    ansible.builtin.yum: 
+      name:
+        yum-utils
+      state:
+        present
+
+  - name: Add docker repo 
+    ansible.builtin.yum_repository:
+      name: epel
+      description: Docker YUM repo
+      file: external_repos
+      baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+      gpgcheck: no
+  
+  - name: Install docker modules
+    ansible.builtin.yum:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+      state: present
+  - name: Enable docker servide
+    ansible.builtin.systemd_service:
+      name: docker
+      enabled: true
+      state:  started
+
+
+
