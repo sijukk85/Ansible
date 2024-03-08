@@ -1,0 +1,7 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.56.101 acs acs.devopslabs.lab
+#K8s Cluster:
+192.168.56.110 k8s-master k8s-master.devopslabs.lab
+192.168.56.113 k8s-node1 k8s-node1.devopslabs.lab
+192.168.56.114 k8s-node2 k8s-node2.devopslabs.lab

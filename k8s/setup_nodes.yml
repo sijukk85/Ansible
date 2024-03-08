@@ -10,7 +10,6 @@
         yum-utils
       state:
         present
-
   - name: Add docker repo 
     ansible.builtin.shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
     args:
@@ -26,11 +25,45 @@
         - docker-buildx-plugin
         - docker-compose-plugin
       state: present
-  - name: Enable docker service
+  - name: Disable firewalld
     systemd:
-      name: docker
+      name: firewalld
+      state: stopped
+      enabled: false
+  - name: disable SELinux
+    ansible.builtin.shell: setenforce 0 && sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+
+  - name: Copy hostfiles
+    copy: 
+      src: templates/hosts
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Add kubernetes repo 
+    copy: 
+      src: templates/kuberepo
+      dest: /etc/yum.repos.d/kubernetes.repo
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Install kubeadm and other binaries
+    ansible.builtin.yum:
+      name:
+        - kubelet 
+        - kubeadm 
+        - kubectl 
+      state: present
+      disableexcludes: kubernetes
+  - name: Enable all service
+    systemd:
+      name: 
+        - docker
+        - kubelet
+        - kubeadm
       state: started
       enabled: true
+
 
 
 
