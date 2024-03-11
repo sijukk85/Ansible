@@ -54,7 +54,7 @@
         - kubeadm 
         - kubectl 
       state: present
-      disableexcludes: kubernetes
+      disable_excludes: kubernetes
   - name: Enable all service
     systemd:
       name: 
