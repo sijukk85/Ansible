@@ -57,12 +57,14 @@
       disable_excludes: kubernetes
   - name: Enable all service
     systemd:
-      name: 
-        - docker
-        - kubelet
-        - kubeadm
+      name: "{{ item }} }"
       state: started
       enabled: true
+    with_items:
+      - docker
+      - kubelet
+      - kubeadm
+
 
 
 
