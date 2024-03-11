@@ -55,6 +55,10 @@
         - kubectl 
       state: present
       disable_excludes: kubernetes
+  
+  - name: reload the systemd daemon 
+    ansible.builtin.shell: systemctl daemon-reload
+
   - name: Enable all service
     systemd:
       name: "{{ item }} }"
@@ -63,8 +67,3 @@
     with_items:
       - docker
       - kubelet
-
-
-
-
-
