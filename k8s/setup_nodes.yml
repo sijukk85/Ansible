@@ -58,12 +58,9 @@
   
   - name: reload the systemd daemon 
     ansible.builtin.shell: systemctl daemon-reload
-
+    
   - name: Enable all service
-    systemd:
-      name: "{{ item }} }"
-      state: started
-      enabled: true
+    ansible.builtin.shell: systemctl enable "{{ item }} }" && systemctl start "{{ item }} }"
     with_items:
       - docker
       - kubelet
