@@ -25,6 +25,7 @@
         - docker-buildx-plugin
         - docker-compose-plugin
       state: present
+  
   - name: Disable firewalld
     systemd:
       name: firewalld
@@ -66,7 +67,7 @@
       - docker
       - kubelet
   - name: Disable Swap 
-    ansible.builtin.shell: swapoff -a
+    ansible.builtin.shell: swapoff -a && sed 's/^[^#]*swap/#&/' -i /etc/fstab
   
 
 
