@@ -31,8 +31,7 @@
       group: root
       mode: '0644'
   - name: Disable firewalld
-    systemd:
-      name: firewalld
+    firewalld:
       port: 8081/tcp
       permanent: yes
       state: enabled
