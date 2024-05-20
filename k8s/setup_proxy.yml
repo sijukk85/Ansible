@@ -35,8 +35,10 @@
       port: 8081/tcp
       permanent: yes
       state: enabled
-  - name: disable SELinux
-    ansible.builtin.shell: setenforce 0 && sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/sysconfig/selinux
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
   - name: reload the systemd daemon 
     ansible.builtin.shell: systemctl daemon-reload
   - name: Enable all service

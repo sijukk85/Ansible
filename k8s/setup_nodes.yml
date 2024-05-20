@@ -31,9 +31,10 @@
       name: firewalld
       state: stopped
       enabled: false
-  - name: disable SELinux
-    ansible.builtin.shell: setenforce 0 && sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
-
+  - name: Put SELinux in permissive mode, logging actions that would be blocked.
+    ansible.posix.selinux:
+      policy: targeted
+      state: permissive
   - name: Copy hostfiles
     copy: 
       src: templates/hosts
