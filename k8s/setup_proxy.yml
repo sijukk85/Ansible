@@ -1,0 +1,78 @@
+---
+- hosts: k8s-cluster
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: Ensure yum-utils installed
+    ansible.builtin.yum: 
+      name:
+        yum-utils
+      state:
+        present
+  - name: Add docker repo 
+    ansible.builtin.shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    args:
+      chdir: /etc/yum.repos.d/
+      creates: docker-ce.repo
+  
+  - name: Install docker modules
+    ansible.builtin.yum:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+      state: present
+  
+  - name: Disable firewalld
+    systemd:
+      name: firewalld
+      state: stopped
+      enabled: false
+  - name: disable SELinux
+    ansible.builtin.shell: setenforce 0 && sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+
+  - name: Copy hostfiles
+    copy: 
+      src: templates/hosts
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Add kubernetes repo 
+    copy: 
+      src: templates/kuberepo
+      dest: /etc/yum.repos.d/kubernetes.repo
+      owner: root
+      group: root
+      mode: '0644'
+  - name: Install kubeadm and other binaries
+    ansible.builtin.yum:
+      name:
+        - kubelet 
+        - kubeadm 
+        - kubectl 
+      state: present
+      disable_excludes: kubernetes  
+  - name: reload the systemd daemon 
+    ansible.builtin.shell: systemctl daemon-reload
+  - name: Enable all service
+    systemd:
+      name: "{{ item }}"
+      state: started
+      enabled: true
+    with_items:
+      - docker
+      - kubelet
+  - name: Disable Swap 
+    ansible.builtin.shell: swapoff -a && sed 's/^[^#]*swap/#&/' -i /etc/fstab
+  
+
+
+
+
+
+
+

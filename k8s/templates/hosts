@@ -1,10 +1,8 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 192.168.56.101 acs acs.devopslabs.lab
-#K8s Cluster:
-192.168.56.100 k8s-cluster.devopslabs.lab
-#HAProxy
-192.168.56.100 k8s-proxy.devopslabs.lab
+#K8s Cluster / HAProxy:
+192.168.56.120 k8s-cluster.devopslabs.lab
 #k8s-master
 192.168.56.110 k8s-master1 k8s-master1.devopslabs.lab
 192.168.56.111 k8s-master2 k8s-master2.devopslabs.lab
