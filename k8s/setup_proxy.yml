@@ -30,6 +30,14 @@
       owner: root
       group: root
       mode: '0644'
+  - name: Disable firewalld
+    systemd:
+      name: firewalld
+      port: 8081/tcp
+      permanent: yes
+      state: enabled
+  - name: disable SELinux
+    ansible.builtin.shell: setenforce 0 && sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/sysconfig/selinux
   - name: reload the systemd daemon 
     ansible.builtin.shell: systemctl daemon-reload
   - name: Enable all service
