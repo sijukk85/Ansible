@@ -1,11 +1,11 @@
-k8s-proxy ansible_ssh_host=192.168.56.120
+k8s-cluster ansible_ssh_host=192.168.56.120
 k8s-master1 ansible_ssh_host=192.168.56.110
 k8s-master2 ansible_ssh_host=192.168.56.111
 k8s-master3 ansible_ssh_host=192.168.56.112
 k8s-node1 ansible_ssh_host=192.168.56.113
 k8s-node2 ansible_ssh_host=192.168.56.114
 [proxy]
-k8s-proxy
+k8s-cluster
 [masters]
 k8s-master1
 k8s-master2
