@@ -32,7 +32,7 @@
       mode: '0644'
   - name: Disable firewalld
     firewalld:
-      port: 8081/tcp
+      port: 6443/tcp
       permanent: yes
       state: enabled
 - name: Put SELinux in permissive mode, logging actions that would be blocked.
