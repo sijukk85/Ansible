@@ -7,7 +7,7 @@
   - name: Ensure yum-utils installed
     ansible.builtin.yum: 
       name:
-        yum-utils
+        yum-utils        
       state:
         present 
   - name: Install HAPROXY modules
@@ -30,15 +30,16 @@
       owner: root
       group: root
       mode: '0644'
-  - name: Disable firewalld
+  - name: Open ports in firewalld
     firewalld:
       port: 6443/tcp
       permanent: yes
       state: enabled
-- name: Put SELinux in permissive mode, logging actions that would be blocked.
-  ansible.posix.selinux:
-    policy: targeted
-    state: permissive
+      immediate: yes
+  - name: Put SELinux in permissive mode, logging actions that would be blocked.
+    selinux:
+      policy: targeted
+      state: permissive
   - name: reload the systemd daemon 
     ansible.builtin.shell: systemctl daemon-reload
   - name: Enable all service
@@ -48,6 +49,12 @@
       enabled: true
     with_items:
       - haproxy
+  - name: Install kubectl and other binaries
+    ansible.builtin.yum:
+      name:
+        - kubectl 
+      state: present
+      disable_excludes: kubernetes 
 
   
 
