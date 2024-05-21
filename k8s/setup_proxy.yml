@@ -49,6 +49,13 @@
       enabled: true
     with_items:
       - haproxy
+  - name: Add kubernetes repo 
+    copy: 
+      src: templates/kuberepo
+      dest: /etc/yum.repos.d/kubernetes.repo
+      owner: root
+      group: root
+      mode: '0644'
   - name: Install kubectl and other binaries
     ansible.builtin.yum:
       name:
