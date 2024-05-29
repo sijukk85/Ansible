@@ -35,13 +35,7 @@
     ansible.posix.selinux:
       policy: targeted
       state: permissive
-  - name: Copy hostfiles
-    copy: 
-      src: templates/hosts
-      dest: /etc/hosts
-      owner: root
-      group: root
-      mode: '0644'
+
   - name: Add kubernetes repo 
     copy: 
       src: templates/kuberepo

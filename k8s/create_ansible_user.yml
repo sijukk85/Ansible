@@ -4,6 +4,13 @@
   become: yes
 
   tasks:
+  - name: Copy hostfiles
+    copy: 
+      src: templates/hosts
+      dest: /etc/hosts
+      owner: root
+      group: root
+      mode: '0644'
   - name: create user
     user: name=ansible password=$6$mjnKHkdQAUTLw9g1$JDReR31/MkcNFt8AFLuGgbSDZxA60HbKOphZqdcdMSumAVMR80MZYsOLCJtA/H8Vl68iQqkfC1VxSkJfSUXho1 group=wheel
   - name: replace the sudoers file in destinations
