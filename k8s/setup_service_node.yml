@@ -1,0 +1,49 @@
+---
+- hosts: build-cluster
+  gather_facts: no
+  become: yes
+
+  tasks:
+  - name: Ensure yum-utils installed
+    ansible.builtin.yum: 
+      name:
+        yum-utils
+      state:
+        present
+  - name: Add docker repo 
+    ansible.builtin.shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    args:
+      chdir: /etc/yum.repos.d/
+      creates: docker-ce.repo
+  
+  - name: Install docker modules
+    ansible.builtin.yum:
+      name:
+        - docker-ce
+        - docker-ce-cli
+        - docker-buildx-plugin
+        - docker-compose-plugin
+      state: present
+  
+  - name: Put SELinux in permissive mode, logging actions that would be blocked.
+    ansible.posix.selinux:
+      policy: targeted
+      state: permissive
+  - name: reload the systemd daemon 
+    ansible.builtin.shell: systemctl daemon-reload
+  - name: Enable all service
+    systemd:
+      name: "{{ item }}"
+      state: started
+      enabled: true
+    with_items:
+      - docker
+
+  
+
+
+
+
+
+
+

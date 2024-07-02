@@ -1,5 +1,6 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.56.100 services services.devopslabs.lab jenkins.devopslabs.lab nexus.devopslabs.lab
 192.168.56.101 acs acs.devopslabs.lab
 #K8s Cluster / HAProxy:
 192.168.56.120 k8s-proxy.devopslabs.lab

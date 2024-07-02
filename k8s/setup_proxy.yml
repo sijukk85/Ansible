@@ -2,7 +2,6 @@
 - hosts: proxy
   gather_facts: no
   become: yes
-
   tasks:
   - name: Ensure yum-utils installed
     ansible.builtin.yum: 

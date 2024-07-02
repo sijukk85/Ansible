@@ -14,7 +14,7 @@
   - name: create user
     user: name=ansible password=$6$mjnKHkdQAUTLw9g1$JDReR31/MkcNFt8AFLuGgbSDZxA60HbKOphZqdcdMSumAVMR80MZYsOLCJtA/H8Vl68iQqkfC1VxSkJfSUXho1 group=wheel
   - name: replace the sudoers file in destinations
-    copy: src=/home/ansible/ansible-scripts/sudoers dest=/etc/sudoers owner=root group=root mode=0440
+    copy: src=/home/siju/Projects/Ansible/sudoers dest=/etc/sudoers owner=root group=root mode=0440
 
   - name: generate ssh key for ansible
     become_user: ansible
@@ -33,7 +33,7 @@
   - name: read ssh key to public_key variable 
     slurp: src={{ item }}
     with_items: 
-    - /home/ansible/.ssh/id_rsa.pub
+    - /home/siju/.ssh/id_rsa.pub
     register: public_key
     delegate_to: localhost
  
